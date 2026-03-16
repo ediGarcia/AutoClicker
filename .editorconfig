@@ -1,0 +1,13 @@
+﻿[*.cs]
+
+# CS8600: Converting null literal or possible null value to non-nullable type.
+dotnet_diagnostic.CS8600.severity = silent
+
+# CS9264: Non-nullable property must contain a non-null value when exiting constructor. Consider adding the 'required' modifier, or declaring the property as nullable, or safely handling the case where 'field' is null in the 'get' accessor.
+dotnet_diagnostic.CS9264.severity = silent
+
+# CS8605: Unboxing a possibly null value.
+dotnet_diagnostic.CS8605.severity = silent
+
+# CS8602: Dereference of a possibly null reference.
+dotnet_diagnostic.CS8602.severity = silent
