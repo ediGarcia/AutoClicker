@@ -10,6 +10,8 @@
                 <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
 
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
             <SolidColorBrush x:Key="WindowBackgroundBrush"
                 Color="#FAF9F5" />
 

@@ -5,10 +5,49 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:viewModels="clr-namespace:AutoClicker.ViewModels"
+        xmlns:models="clr-namespace:AutoClicker.Models"
         mc:Ignorable="d"
         Title="AutoClicker" Height="600" Width="1200"
+        x:Name="Root"
         Background="{DynamicResource ApplicationBackgroundBrush}"
         Closing="MainWindow_OnClosing">
+    <Window.Resources>
+        <Style x:Key="ContentBorder"
+            TargetType="Border">
+            <Setter
+                Property="Background"
+                Value="White" />
+            <Setter
+                Property="CornerRadius"
+                Value="10" />
+            <Setter
+                Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect
+                        Color="#EEE"
+                        ShadowDepth="3" />
+                </Setter.Value>
+            </Setter>
+            <Setter
+                Property="Padding"
+                Value="10" />
+
+            <Style.Triggers>
+                <Trigger
+                    Property="IsMouseOver"
+                    Value="True">
+                    <Setter
+                        Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect
+                                Color="#DDD"
+                                ShadowDepth="3" />
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Window.DataContext>
         <viewModels:MainViewModel />
     </Window.DataContext>
@@ -22,38 +61,8 @@
             </Grid.RowDefinitions>
 
             <Border
-                Background="White"
                 Grid.Row="0"
-                CornerRadius="10"
-                Padding="10">
-                <Border.Style>
-                    <Style
-                        TargetType="Border">
-                        <Setter
-                            Property="Effect">
-                            <Setter.Value>
-                                <DropShadowEffect
-                                    Color="#EEE"
-                                    ShadowDepth="3" />
-                            </Setter.Value>
-                        </Setter>
-
-                        <Style.Triggers>
-                            <Trigger
-                                Property="IsMouseOver"
-                                Value="True">
-                                <Setter
-                                    Property="Effect">
-                                    <Setter.Value>
-                                        <DropShadowEffect
-                                                Color="#DDD"
-                                                ShadowDepth="3" />
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
+                Style="{StaticResource ContentBorder}">
 
                 <StackPanel
                     HorizontalAlignment="Center"
@@ -123,6 +132,12 @@
                         Minimum="0"
                         MinWidth="100"
                         Value="{Binding MouseCapturePrecision, UpdateSourceTrigger=PropertyChanged}" />
+                    <ToggleButton
+                        x:Name="TbgHelp"
+                        Content="{ui:SymbolIcon ChatHelp24, FontSize='20'}"
+                        Margin="10, 0, 0, 0"
+                        Padding="5"
+                        ToolTip="Help..." />
                 </StackPanel>
             </Border>
 
@@ -159,6 +174,55 @@
                     </Style>
                 </ui:TextBox.Style>
             </ui:TextBox>
+
+            <Border
+                Grid.Row="1"
+                Margin="0, 10, 0, 0"
+                Style="{StaticResource ContentBorder}"
+                Visibility="{Binding IsChecked, ElementName=TbgHelp, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <ScrollViewer
+                    VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <ui:TextBlock
+                            FontSize="20"
+                            FontWeight="Bold"
+                            Text="Commands" />
+                        <ItemsControl
+                            ItemsSource="{Binding HelpTopics}"
+                            Margin="0, 20, 0, 0">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate
+                                    DataType="{x:Type models:HelpTopic}">
+                                    <StackPanel>
+                                        <StackPanel
+                                            Orientation="Horizontal">
+                                            <ui:Button
+                                                Command="{Binding DataContext.CopyToClipboardCommand, ElementName=Root}"
+                                                CommandParameter="{Binding CommandText}"
+                                                Content="{ui:SymbolIcon Copy24, FontSize='20'}"
+                                                Margin="0, 0, 10, 0"
+                                                Padding="5">
+                                                <ui:Button.ToolTip>
+                                                    <ui:TextBlock
+                                                        Text="{Binding CommandText, StringFormat='{}Copy &quot;{0}&quot; to Clipboard.'}" />
+                                                </ui:Button.ToolTip>
+                                            </ui:Button>
+                                            <ui:TextBlock
+                                                FontSize="17"
+                                                FontWeight="DemiBold"
+                                                Text="{Binding Title}"
+                                                VerticalAlignment="Center" />
+                                        </StackPanel>
+                                        <ui:TextBlock
+                                            Margin="0, 5, 0, 20"
+                                            Text="{Binding Description}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
         </Grid>
 
         <ContentPresenter

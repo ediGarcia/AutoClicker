@@ -1,4 +1,5 @@
-﻿using AutoClicker.Messages;
+﻿using System.Windows;
+using AutoClicker.Messages;
 using AutoClicker.Models;
 using AutoClicker.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -75,6 +76,108 @@ public partial class MainViewModel : ObservableObject
     }
 
     /// <summary>
+    /// Gets the collection of help topics.
+    /// </summary>
+    public IReadOnlyCollection<HelpTopic> HelpTopics { get; } = new List<HelpTopic>(22)
+    {
+        new(
+            "MouseMove",
+            "MouseMove x y",
+            "Moves the cursor to the specified position on screen."),
+
+        new(
+            "LeftButtonClick",
+            "LeftButtonClick / LeftButtonClick x y",
+            "Performs a left mouse button click. Setting the screen position is optional."),
+        new(
+            "LeftButtonDoubleClick",
+            "LeftButtonDoubleClick / LeftButtonDoubleClick x y",
+            "Performs a left mouse button double-click. Setting the screen position is optional."),
+        new(
+            "LeftButtonDown",
+            "LeftButtonDown / LeftButtonDown x y",
+            "Holds the left mouse button down (if released). Setting the screen position is optional."),
+        new(
+            "LeftButtonUp",
+            "LeftButtonUp / LeftButtonUp x y",
+            "Releases the left mouse button (if pressed down). Setting the screen position is optional."),
+
+        new(
+            "RightButtonClick",
+            "RightButtonClick / RightButtonClick x y",
+            "Performs a right mouse button click. Setting the screen position is optional."),
+        new(
+            "RightButtonDoubleClick",
+            "RightButtonDoubleClick / RightButtonDoubleClick x y",
+            "Performs a right mouse button double-click. Setting the screen position is optional."),
+        new(
+            "RightButtonDown",
+            "RightButtonDown / RightButtonDown x y",
+            "Holds the right mouse button down (if released). Setting the screen position is optional."),
+        new(
+            "RightButtonUp",
+            "RightButtonUp / RightButtonUp x y",
+            "Releases the right mouse button (if pressed down). Setting the screen position is optional."),
+
+        new(
+            "MiddleButtonClick",
+            "MiddleButtonClick / MiddleButtonClick x y",
+            "Performs a middle mouse button click. Setting the screen position is optional."),
+        new(
+            "MiddleButtonDoubleClick",
+            "MiddleButtonDoubleClick / MiddleButtonDoubleClick x y",
+            "Performs a middle mouse button double-click. Setting the screen position is optional."),
+        new(
+            "MiddleButtonDown",
+            "MiddleButtonDown / MiddleButtonDown x y",
+            "Holds the middle mouse button down (if released). Setting the screen position is optional."),
+        new(
+            "MiddleButtonUp",
+            "MiddleButtonUp / MiddleButtonUp x y",
+            "Releases the middle mouse button (if pressed down). Setting the screen position is optional."),
+
+        new(
+            "MouseWheel",
+            "MouseWheel x",
+            "Moves the mouse wheel the specified number of notches. Positives number scrolls up and negative number scrolls down."),
+
+        new(
+        "KeyPress",
+        "KeyPress key",
+        "Presses the specified keyboard key."),
+
+        new(
+            "KeyDown",
+            "KeyDown key",
+            "Holds the specified keyboard key down (if released)."),
+
+        new(
+            "KeyUp",
+            "KeyUp key",
+            "Releases the specified keyboard key (if pressed down)."),
+
+        new(
+            "Wait",
+            "Wait x",
+            "Waits for the specified period of time (milliseconds)."),
+
+        new(
+            "StartRepeater",
+            "StartRepeater x",
+            "Starts a code section that will be executed the specified number of times."),
+
+        new(
+            "EndRepeater",
+            "EndRepeater",
+            "Ends a code section that will be executed the number of times specified by StartRepeater."),
+
+        new(
+            "//",
+            "// (Comment)",
+            "A double-slash sequence at the beginning of a line indicates that line will be ignored. Use it to add useful information.")
+    };
+
+    /// <summary>
     /// Gets a value indicating whether the application is currently recording.
     /// </summary>
     public bool IsRecording
@@ -125,6 +228,16 @@ public partial class MainViewModel : ObservableObject
 
     #region Events
 
+    #region CanCopyToClipboard
+    /// <summary>
+    /// Determines whether the specified text can be copied to the clipboard.
+    /// </summary>
+    /// <param name="text"></param>
+    /// <returns></returns>
+    private bool CanCopyToClipboard(string text) =>
+        !text.IsNullOrWhiteSpace();
+    #endregion
+
     #region CanSaveFile
     /// <summary>
     /// Determines whether the <see cref="SaveFileCommand"/> command can be executed.
@@ -152,6 +265,15 @@ public partial class MainViewModel : ObservableObject
     !IsRecording && !IsRunning;
     #endregion
 
+    #region CopyToClipboard
+    /// <summary>
+    /// Copies the specified text to the clipboard.
+    /// </summary>
+    /// <param name="text"></param>
+    [RelayCommand(CanExecute = nameof(CanCopyToClipboard))]
+    private void CopyToClipboard(string text) =>
+    Clipboard.SetText(text);
+    #endregion
     #region CreateNewFile
     /// <summary>
     /// Clears the current command text to create a new file.
