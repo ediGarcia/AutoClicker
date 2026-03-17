@@ -214,11 +214,25 @@ public static class CommandService
         // Helper function to generate mouse-related commands.
         Command GenerateMouseCommand(CommandType type, string[] parts, int lineIndex)
         {
-            ValidatePartsLength(parts, 3, lineIndex);
-            int x = ConvertToInt(parts[1], true, lineIndex);
-            int y = ConvertToInt(parts[2], true, lineIndex);
+            switch (parts.Length)
+            {
+                case 1:
+                    return new(type);
 
-            return new(type, new Point(x, y));
+                case 3:
+                {
+                    int x = ConvertToInt(parts[1], true, lineIndex);
+                    int y = ConvertToInt(parts[2], true, lineIndex);
+
+                    return new(type, new Point(x, y));
+                }
+
+                default:
+                    ThrowFormatError(lineIndex);
+                    break;
+            }
+
+            return null!;
         }
 
         // Helper function to validate parts length.
@@ -379,74 +393,62 @@ public static class CommandService
                 break;
 
             case CommandType.LeftButtonClick:
-                SystemService.SetMousePosition((Point)command.Value);
-                await Task.Delay(ClickDelay, CancellationToken.None);
+                await MoveMouseAndWait(command.Value as Point?);
                 SystemService.SimulateMouseClick(MouseButton.Left);
                 break;
 
             case CommandType.LeftButtonDoubleClick:
-                SystemService.SetMousePosition((Point)command.Value);
-                await Task.Delay(ClickDelay, CancellationToken.None);
+                await MoveMouseAndWait(command.Value as Point?);
                 SystemService.SimulateMouseDoubleClick(MouseButton.Left);
                 break;
 
             case CommandType.LeftButtonDown:
-                SystemService.SetMousePosition((Point)command.Value);
-                await Task.Delay(ClickDelay, CancellationToken.None);
+                await MoveMouseAndWait(command.Value as Point?);
                 SystemService.SimulateMouseDown(MouseButton.Left);
                 break;
 
             case CommandType.LeftButtonUp:
-                SystemService.SetMousePosition((Point)command.Value);
-                await Task.Delay(ClickDelay, CancellationToken.None);
+                await MoveMouseAndWait(command.Value as Point?);
                 SystemService.SimulateMouseUp(MouseButton.Left);
                 break;
 
             case CommandType.RightButtonClick:
-                SystemService.SetMousePosition((Point)command.Value);
-                await Task.Delay(ClickDelay, CancellationToken.None);
+                await MoveMouseAndWait(command.Value as Point?);
                 SystemService.SimulateMouseClick(MouseButton.Right);
                 break;
 
             case CommandType.RightButtonDoubleClick:
-                SystemService.SetMousePosition((Point)command.Value);
-                await Task.Delay(ClickDelay, CancellationToken.None);
+                await MoveMouseAndWait(command.Value as Point?);
                 SystemService.SimulateMouseDoubleClick(MouseButton.Right);
                 break;
 
             case CommandType.RightButtonDown:
-                SystemService.SetMousePosition((Point)command.Value);
-                await Task.Delay(ClickDelay, CancellationToken.None);
+                await MoveMouseAndWait(command.Value as Point?);
                 SystemService.SimulateMouseDown(MouseButton.Right);
                 break;
 
             case CommandType.RightButtonUp:
-                SystemService.SetMousePosition((Point)command.Value);
-                await Task.Delay(ClickDelay, CancellationToken.None);
+                await MoveMouseAndWait(command.Value as Point?);
                 SystemService.SimulateMouseUp(MouseButton.Right);
                 break;
 
             case CommandType.MiddleButtonClick:
-                SystemService.SetMousePosition((Point)command.Value);
-                await Task.Delay(ClickDelay, CancellationToken.None);
+                await MoveMouseAndWait(command.Value as Point?);
                 SystemService.SimulateMouseClick(MouseButton.Middle);
                 break;
 
             case CommandType.MiddleButtonDoubleClick:
-                SystemService.SetMousePosition((Point)command.Value);
-                await Task.Delay(ClickDelay, CancellationToken.None);
+                await MoveMouseAndWait(command.Value as Point?);
                 SystemService.SimulateMouseDoubleClick(MouseButton.Middle);
                 break;
 
             case CommandType.MiddleButtonDown:
-                SystemService.SetMousePosition((Point)command.Value);
-                await Task.Delay(ClickDelay, CancellationToken.None);
+                await MoveMouseAndWait(command.Value as Point?);
                 SystemService.SimulateMouseDown(MouseButton.Middle);
                 break;
 
             case CommandType.MiddleButtonUp:
-                SystemService.SetMousePosition((Point)command.Value);
-                await Task.Delay(ClickDelay, CancellationToken.None);
+                await MoveMouseAndWait(command.Value as Point?);
                 SystemService.SimulateMouseUp(MouseButton.Middle);
                 break;
 
@@ -469,6 +471,20 @@ public static class CommandService
             default:
                 throw new ArgumentOutOfRangeException($"Unsupported command type: {command.Type}.");
         }
+
+        #region Local Functions
+
+        // Moves the cursor of the mouse to the specified position and waits 10 ms.
+        async Task MoveMouseAndWait(Point? position)
+        {
+            if (position == null)
+                return;
+
+            SystemService.SetMousePosition((Point)command.Value);
+                await Task.Delay(ClickDelay, CancellationToken.None);
+        }
+
+        #endregion
     }
     #endregion
 
