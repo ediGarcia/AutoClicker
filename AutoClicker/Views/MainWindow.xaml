@@ -174,56 +174,72 @@
                     </Style>
                 </ui:TextBox.Style>
             </ui:TextBox>
-
-            <Border
-                Grid.Row="1"
-                Margin="0, 10, 0, 0"
-                Style="{StaticResource ContentBorder}"
-                Visibility="{Binding IsChecked, ElementName=TbgHelp, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <ScrollViewer
-                    VerticalScrollBarVisibility="Auto">
-                    <StackPanel>
-                        <ui:TextBlock
-                            FontSize="20"
-                            FontWeight="Bold"
-                            Text="Commands" />
-                        <ItemsControl
-                            ItemsSource="{Binding HelpTopics}"
-                            Margin="0, 20, 0, 0">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate
-                                    DataType="{x:Type models:HelpTopic}">
-                                    <StackPanel>
-                                        <StackPanel
-                                            Orientation="Horizontal">
-                                            <ui:Button
-                                                Command="{Binding DataContext.CopyToClipboardCommand, ElementName=Root}"
-                                                CommandParameter="{Binding CommandText}"
-                                                Content="{ui:SymbolIcon Copy24, FontSize='20'}"
-                                                Margin="0, 0, 10, 0"
-                                                Padding="5">
-                                                <ui:Button.ToolTip>
-                                                    <ui:TextBlock
-                                                        Text="{Binding CommandText, StringFormat='{}Copy &quot;{0}&quot; to Clipboard.'}" />
-                                                </ui:Button.ToolTip>
-                                            </ui:Button>
-                                            <ui:TextBlock
-                                                FontSize="17"
-                                                FontWeight="DemiBold"
-                                                Text="{Binding Title}"
-                                                VerticalAlignment="Center" />
-                                        </StackPanel>
-                                        <ui:TextBlock
-                                            Margin="0, 5, 0, 20"
-                                            Text="{Binding Description}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-                </ScrollViewer>
-            </Border>
         </Grid>
+
+        <Border
+            Margin="10"
+            Style="{StaticResource ContentBorder}"
+            Visibility="{Binding IsChecked, ElementName=TbgHelp, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition
+                        Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition
+                        Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <ui:TextBlock
+                    Grid.Row="0"
+                    FontSize="20"
+                    FontWeight="Bold"
+                    Text="Commands" />
+
+                <ScrollViewer
+                    Grid.Row="1">
+                    <ItemsControl
+                        ItemsSource="{Binding HelpTopics}"
+                        Margin="0, 20, 0, 0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate
+                                DataType="{x:Type models:HelpTopic}">
+                                <StackPanel>
+                                    <StackPanel
+                                        Orientation="Horizontal">
+                                        <ui:Button
+                                            Command="{Binding DataContext.CopyToClipboardCommand, ElementName=Root}"
+                                            CommandParameter="{Binding CommandText}"
+                                            Content="{ui:SymbolIcon Copy24, FontSize='20'}"
+                                            Margin="0, 0, 10, 0"
+                                            Padding="5">
+                                            <ui:Button.ToolTip>
+                                                <ui:TextBlock
+                                                    Text="{Binding CommandText, StringFormat='{}Copy &quot;{0}&quot; to Clipboard.'}" />
+                                            </ui:Button.ToolTip>
+                                        </ui:Button>
+                                        <ui:TextBlock
+                                            FontSize="17"
+                                            FontWeight="DemiBold"
+                                            Text="{Binding Title}"
+                                            VerticalAlignment="Center" />
+                                    </StackPanel>
+                                    <ui:TextBlock
+                                        Margin="0, 5, 0, 20"
+                                        Text="{Binding Description}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+
+                <ToggleButton
+                    Grid.Row="2"
+                    Content="Close"
+                    IsChecked="{Binding IsChecked, ElementName=TbgHelp}"
+                    HorizontalAlignment="Stretch"
+                    Margin="0, 10, 0, 0" />
+            </Grid>
+        </Border>
 
         <ContentPresenter
             x:Name="CtpPopup" />

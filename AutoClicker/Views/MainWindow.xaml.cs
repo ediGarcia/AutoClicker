@@ -18,17 +18,17 @@ public partial class MainWindow : Window
         InitializeComponent();
 
         CbxStopKey.ItemsSource = new[]
-            {
-                Key.D0,
-                Key.D1,
-                Key.D2,
-                Key.D3,
-                Key.D4,
-                Key.D5,
-                Key.D6,
-                Key.D7,
-                Key.D8,
-                Key.D9,
+        {
+            Key.D0,
+            Key.D1,
+            Key.D2,
+            Key.D3,
+            Key.D4,
+            Key.D5,
+            Key.D6,
+            Key.D7,
+            Key.D8,
+            Key.D9,
             Key.A,
             Key.Add,
             Key.Apps,
@@ -133,7 +133,7 @@ public partial class MainWindow : Window
                 UseLayoutRounding = true,
                 VerticalContentAlignment = VerticalAlignment.Center
             }.ShowAsync()
-            );
+        );
 
         WeakReferenceMessenger.Default.Register<SaveFileMessage>(this, async (_, message) =>
         {
@@ -220,16 +220,16 @@ public partial class MainWindow : Window
     /// </summary>
     /// <returns></returns>
     private async Task<ContentDialogResult> ShowUnsavedChangesPopup() =>
-await new ContentDialog(CtpPopup)
-{
-CloseButtonText = "Cancel",
-Content = "Save changes to the current file (unsaved changes will be lost)?",
-PrimaryButtonText = "Save",
-SecondaryButtonText = "Don't save",
-Title = "Unsaved changes",
-UseLayoutRounding = true,
-VerticalContentAlignment = VerticalAlignment.Center
-}.ShowAsync(); 
+    await new ContentDialog(CtpPopup)
+    {
+        CloseButtonText = "Cancel",
+        Content = "Save changes to the current file (unsaved changes will be lost)?",
+        PrimaryButtonText = "Save",
+        SecondaryButtonText = "Don't save",
+        Title = "Unsaved changes",
+        UseLayoutRounding = true,
+        VerticalContentAlignment = VerticalAlignment.Center
+    }.ShowAsync();
     #endregion
 
     #endregion
